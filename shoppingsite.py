@@ -7,17 +7,18 @@ Authors: Joel Burton, Christian Fernandez, Meggie Mahnken, Katie Byers.
 """
 
 
-from flask import Flask, render_template, redirect, flash
+from flask import Flask, render_template, redirect, flash, session
 import jinja2
 
 import melons
 
 
 app = Flask(__name__)
+app.secret_key = "Coooookie"
 
 # A secret key is needed to use Flask sessioning features
 
-app.secret_key = 'this-should-be-something-unguessable'
+# app.secret_key = 'this-should-be-something-unguessable'
 
 # Normally, if you refer to an undefined variable in a Jinja template,
 # Jinja silently ignores this. This makes debugging difficult, so we'll
@@ -30,7 +31,7 @@ app.jinja_env.undefined = jinja2.StrictUndefined
 @app.route("/")
 def index():
     """Return homepage."""
-
+    print session
     return render_template("homepage.html")
 
 
@@ -64,7 +65,10 @@ def show_shopping_cart():
 
     # The logic here will be something like:
     #
-    # - get the cart dictionary from the session
+    
+
+
+            # - get the cart dictionary from the session
     # - create a list to hold melon objects and a variable to hold the total
     #   cost of the order
     # - loop over the cart dictionary, and for each melon id:
@@ -92,7 +96,10 @@ def add_to_cart(melon_id):
     # TODO: Finish shopping cart functionality
 
     # The logic here should be something like:
-    #
+    if session["cart"] == None:
+        session["cart"] = {}
+
+    cart[melon_id] = cart[melon_id].get(melon, 0) + 1
     # - check if a "cart" exists in the session, and create one (an empty
     #   dictionary keyed to the string "cart") if not
     # - check if the desired melon id is the cart, and if not, put it in
